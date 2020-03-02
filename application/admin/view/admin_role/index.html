@@ -1,0 +1,95 @@
+{extend name='layouts/head_tpl'}
+
+{block name='body-content'}
+
+<button class="layui-btn layui-btn-normal"
+        onclick="addRoles()">
+    <i class="layui-icon">&#xe608;</i> 添加角色
+</button>
+<div class="layui-inline">
+    <div class="layui-input-inline">
+        <form class="form-search" action="{:url('admin/role/index')}" method="get">
+            <input type="text" value="{$search}" name="str_search" placeholder="请输入角色名关键字" class="layui-input search_input">
+        </form>
+    </div>
+    <button class="layui-btn-warm btn-search-mz">
+        <i class="layui-icon">&#xe615;</i>
+    </button>
+</div>
+
+<table class="layui-table table-body" lay-even="" lay-skin="row">
+    <colgroup>
+        <col width="5%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+        <col width="15%">
+    </colgroup>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>角色名</th>
+        <th>添加时间</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody class="tbody-roles">
+    {volist name="roles" id="vo"}
+    <tr class="tr-role-{$vo['id']}">
+        <td>{$vo['id']}</td>
+        <td>{$vo['role_name']}</td>
+        <td>{:date('Y-m-d H:i:s',$vo['create_time'])}</td>
+        <td>
+        <span class="layui-badge layui-bg-{if $vo['status'] neq 1}cyan{else}blue{/if}">
+        	{if $vo['status'] eq 1}
+        		正常
+			{else}
+       			删除
+        	{/if}
+        </span>
+        </td> 
+        <td>
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-sm"
+                        onclick="editRole('{$vo['id']}')">
+                    <i class="layui-icon">&#xe642;</i>
+                </button>
+                <button class="layui-btn layui-btn-sm"
+                        onclick="delRole('{$vo['id']}')">
+                    <i class="layui-icon">&#xe640;</i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+{/block}
+
+{block name='single-content'}
+<script src="__ADMIN__/js/base.js"></script>
+<script>
+    //根据ID 删除角色信息
+    function delRole(id) {
+        var toUrl = "{:url('admin/role/edit',['id'=>'RoleID'])}";
+        toUrl = toUrl.replace('RoleID', id);
+        ToDelItem(id, toUrl, '.tr-role-' + id);
+    }
+
+    //添加新角色
+    function addRoles() {
+        var toUrl = "{:url('admin/role/add')}";
+        ToOpenPopups(toUrl, '✚ 添加新角色', '70%', '80%');
+    }
+
+    //根据ID修改角色信息
+    function editRole(id) {
+        var toUrl = "{:url('admin/role/edit',['id'=>'RoleID'])}";
+        toUrl = toUrl.replace('RoleID', id);
+        ToOpenPopups(toUrl, '✎ 角色信息修改', '70%', '80%');
+    }
+</script>
+
+
+{/block}
