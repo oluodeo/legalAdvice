@@ -1,0 +1,4 @@
+deployScripts:
+  start:
+  restart:
+  delete:
